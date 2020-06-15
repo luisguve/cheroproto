@@ -3,7 +3,7 @@ syntax = "proto3";
 // Package cheropatillapb defines the interface to send and receive messages to
 // and from the server.
 package cheropatillapb;
-option go_package = "github.com/luisguve/cheroapi/internal/protogen/cheropatillapb";
+option go_package = "github.com/luisguve/cheroproto-go/cheroapi";
 
 import "google/protobuf/timestamp.proto";
 import "data_format.proto";
@@ -290,14 +290,14 @@ message SaveThreadRequest {
 
 message SaveThreadResponse {}
 
-// UnsaveThreadRequest holds the id of the user which is unsaving the thread and the 
+// UndoSaveThreadRequest holds the id of the user which is unsaving the thread and the 
 // information about the thread to be removed from the user's saved thread list.
-message UnsaveThreadRequest {
+message UndoSaveThreadRequest {
 	string user_id = 1;
 	context.Thread thread = 2;
 }
 
-message UnsaveThreadResponse {}
+message UndoSaveThreadResponse {}
 
 // ViewUsersRequest is a message for requesting either following or followers users 
 // data of a given user
@@ -437,7 +437,7 @@ service CrudCheropatilla {
 	// Request to save thread
 	rpc SaveThread(SaveThreadRequest) returns(SaveThreadResponse) {}
 	// Request to remove thread from user's list of saved threads
-	rpc UnsaveThread(UnsaveThreadRequest) returns (UnsaveThreadResponse) {}
+	rpc UndoSaveThread(UndoSaveThreadRequest) returns (UndoSaveThreadResponse) {}
 
 	// Get either following or followers users' basic data
 	rpc ViewUsers(ViewUsersRequest) returns (ViewUsersResponse) {}
