@@ -366,10 +366,9 @@ message RegisterUserRequest {
 	string email = 1;
 	string name = 2;
 	string pic_url = 3;
-	string id = 4;
-	string username = 5;
-	string alias = 6;
-	string about = 7;
+	string username = 4;
+	string alias = 5;
+	string about = 6;
 	string password = 150;
 }
 
