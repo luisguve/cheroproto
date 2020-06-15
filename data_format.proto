@@ -3,7 +3,7 @@ syntax = "proto3";
 // package dataformat defines the format in which the data will be stored 
 // in the database.
 package dataformat;
-option go_package = "github.com/luisguve/cheroapi/internal/protogen/dataformat";
+option go_package = "github.com/luisguve/cheroproto-go/dataformat";
 
 import "google/protobuf/timestamp.proto";
 import "context.proto";

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 // package metadata defines message types for describing content
 package metadata;
-option go_package = "github.com/luisguve/cheroapi/internal/protogen/metadata";
+option go_package = "github.com/luisguve/cheroproto-go/metadata";
 
 import "google/protobuf/timestamp.proto";
 

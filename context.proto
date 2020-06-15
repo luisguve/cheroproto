@@ -4,7 +4,7 @@ syntax = "proto3";
 // about the place at which an event occurs or where content should be 
 // stored in and retrieved from.
 package context;
-option go_package = "github.com/luisguve/cheroapi/internal/protogen/context";
+option go_package = "github.com/luisguve/cheroproto-go/context";
 
 message Context {
 	oneof ctx {
