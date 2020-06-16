@@ -58,7 +58,7 @@ message BasicUserData {
 
 message PrivateData {
 	string email = 1;
-	string password = 2;
+	bytes password = 2;
 }
 
 message User {
