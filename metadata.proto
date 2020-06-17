@@ -25,7 +25,7 @@ message Content {
 	google.protobuf.Timestamp last_updated = 2;
 	// AvgUpdateTime indicates the average difference in time between
 	// interactions.
-	uint64 avg_update_time = 3;
+	double avg_update_time = 3;
 	// DataKey holds the key referencing the data.
 	string data_key = 4;
 }
