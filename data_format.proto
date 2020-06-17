@@ -104,4 +104,6 @@ message Content {
 	metadata.Content metadata = 14;
 	// permalink is the full url to the content, including fragments
 	string permalink = 15;
+	// list of users who have undone an action on this content
+	repeated string undoner_ids = 16;
 }
