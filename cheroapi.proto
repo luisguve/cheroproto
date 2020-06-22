@@ -176,7 +176,7 @@ message CommentRequest {
 }
 
 // UpdateContentRequest holds the updated content.
-message UpdateContentRequest {
+/* message UpdateContentRequest {
 	// data holds the actual content updated.
 	Content data = 1;
 	// The user id of who's submitting the updated content must match the user id of 
@@ -188,7 +188,7 @@ message UpdateContentRequest {
 		context.Comment comment_ctx = 4;
 		context.Subcomment subcomment_ctx = 5;
 	}
-}
+} */
 
 // DeleteContentRequest holds information about the delete content event.
 message DeleteContentRequest {
@@ -403,7 +403,7 @@ service CrudCheropatilla {
 	// Post comment on a thread or in a comment
 	rpc Comment(CommentRequest) returns (stream NotifyUser) {}
 	// Update a thread, comment or subcomment
-	rpc UpdateContent(UpdateContentRequest) returns (stream NotifyUser) {}
+	// rpc UpdateContent(UpdateContentRequest) returns (stream NotifyUser) {}
 	// Delete a thread, comment or subcomment
 	rpc DeleteContent(DeleteContentRequest) returns (DeleteContentResponse) {}
 	// Post a thread to create
