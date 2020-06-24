@@ -65,7 +65,7 @@ message User {
 	BasicUserData basic_user_data = 1;
 	PrivateData private_data = 2;
 	// ids of users that are following this user.
-	repeated string follower_ids = 3;
+	repeated string followers_ids = 3;
 	// ids of users that this user is following.
 	repeated string following_ids = 4;
 	// unread notifications of this user.
