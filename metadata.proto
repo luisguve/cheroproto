@@ -28,6 +28,8 @@ message Content {
 	double avg_update_time = 3;
 	// DataKey holds the key referencing the data.
 	string data_key = 4;
+	// Diff holds the accumulated time difference between interactions.
+	int64 diff = 5;
 }
 
 // GeneralContent holds the most updated information about the interactions
