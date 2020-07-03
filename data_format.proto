@@ -50,10 +50,16 @@ message Activity {
 
 // Public data of users
 message BasicUserData {
+	// How user wants other users to see him.
 	string alias = 1;
+	// Unique username.
 	string username = 2;
+	// Path to pic.
 	string pic_url = 3;
+	// Brief description.
 	string about = 4;
+	// The real Name.
+	string name = 5;
 }
 
 message PrivateData {
