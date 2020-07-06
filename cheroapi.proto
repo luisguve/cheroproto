@@ -30,7 +30,7 @@ message ContentMetadata {
 	string section = 2;
 	// permalink is the full url to the content, including any fragment
 	string permalink = 3;
-	uint32 topvotes = 4;
+	uint32 upvotes = 4;
 	uint32 replies = 5;
 	repeated string voter_ids = 6;
 	repeated string replier_ids = 7;
