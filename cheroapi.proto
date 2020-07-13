@@ -135,6 +135,8 @@ message ContentRule {
 		context.Comment comment_ctx = 3;
 		context.Subcomment subcomment_ctx = 4;
 	}
+	// Status holds either NEW, REL or TOP
+	string status = 5;
 }
 
 // UpvoteRequest holds information about the upvote event.
