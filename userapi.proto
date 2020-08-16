@@ -1,0 +1,329 @@
+syntax = "proto3";
+
+// Package userapi defines the interface to send and receive messages to get and update
+// user-related data.
+package userapi;
+option go_package = "github.com/luisguve/cheroproto-go/userapi";
+
+import "google/protobuf/timestamp.proto";
+import "data_format.proto";
+import "context.proto";
+
+// UserHeaderData holds information to be displayed in the header navigation section
+// of every page.
+message UserHeaderData {
+	string alias = 1;
+	string username = 2;
+	// unread notifications of this user.
+	repeated dataformat.Notif unread_notifs = 3;
+	// read notifications of this user.
+	repeated dataformat.Notif read_notifs = 4;
+	// last time this user created a thread
+	google.protobuf.Timestamp last_time_created = 5;
+}
+
+// UserList holds a list of user ids
+message UserList {
+	repeated string ids = 1;
+}
+
+// GetBasicUserDataRequest holds the id of the user to get its basic data
+message GetBasicUserDataRequest {
+	string user_id = 1;
+}
+
+// UpdateBasicUserDataRequest holds public data of a user that could be updated.
+message UpdateBasicUserDataRequest {
+	string user_id = 1;
+	string username = 2;
+	string description = 3;
+	string pic_url = 4;
+	string alias = 5;
+}
+
+message UpdateBasicUserDataResponse {}
+
+// ReadNotifsRequest holds the id of the user whose unread notifications will be 
+// marked as read
+message ReadNotifsRequest {
+	string user_id = 1;
+}
+
+message ReadNotifsResponse {}
+
+// ClearNotifsRequest holds the id of the user whose both unread and read 
+// notifications will be deleted
+message ClearNotifsRequest {
+	string user_id = 1;
+}
+
+message ClearNotifsResponse {}
+
+// FollowUserRequest holds the id of the user which is following and the username
+// of the user being followed
+message FollowUserRequest {
+	string user_id = 1;
+	// user_to_follow indicates the username
+	string user_to_follow = 2;
+}
+
+message FollowUserResponse {}
+
+// UnfollowUserRequest holds the id of the user which is unfollowing and the username
+// of the user losing a follower
+message UnfollowUserRequest {
+	string user_id = 1;
+	string user_to_unfollow = 2;
+}
+
+message UnfollowUserResponse {}
+
+// SaveThreadRequest holds the id of the user which is saving the thread and the 
+// information about the thread to be saved.
+message SaveThreadRequest {
+	string user_id = 1;
+	context.Thread thread = 2;
+}
+
+message SaveThreadResponse {}
+
+// UndoSaveThreadRequest holds the id of the user which is unsaving the thread and the 
+// information about the thread to be removed from the user's saved thread list.
+message RemoveSavedRequest {
+	string user_id = 1;
+	context.Thread ctx = 2;
+}
+
+message RemoveSavedResponse {}
+
+// ViewUsersRequest is a message for requesting either following or followers users 
+// data of a given user
+message ViewUsersRequest {
+	string user_id = 1;
+	// context is either following or followers
+	string context = 2;
+	// offset indicates how many users to ignore for pagination
+	uint32 offset = 3;
+}
+
+// ViewUsersResponse holds a list of basic user data of requested users following
+// or followers of a user
+message ViewUsersResponse {
+	repeated dataformat.BasicUserData basic_user_data = 1;
+}
+
+// ViewUserByUsernameRequest is a message for requesting public data of a user
+message ViewUserByUsernameRequest {
+	string username = 1;
+}
+
+// ViewUserResponse holds some basic data of a requested user
+message ViewUserResponse {
+	string alias = 1;
+	string username = 2;
+	string pic_url = 3;
+	string about = 4;
+	string user_id = 5;
+	google.protobuf.Timestamp last_time_created = 6;
+	repeated string followers_ids = 7;
+	repeated string following_ids = 8;
+}
+
+// GetDashboardDataRequest holds the user id of the user to request the data for its
+// dashboard.
+message GetDashboardDataRequest {
+	string user_id = 1;
+}
+
+// DashboardData holds the header data, the list of users this user is following,
+// the list of users that are following this user. the num of threads saved by
+// the user and the user id.
+message DashboardData {
+	UserHeaderData user_header_data = 1;
+	// ids of users that are following this user.
+	repeated string followers_ids = 2;
+	// ids of users that this user is following.
+	repeated string following_ids = 3;
+	uint32 saved_threads = 4;
+	string user_id = 5;
+}
+
+// LoginRequest is a message for requesting the validation of a user's credentials
+message LoginRequest {
+	string username = 1;
+	string password = 150;
+}
+
+// LoginResponse holds the id of the user that just logged in
+message LoginResponse {
+	string user_id = 1;
+}
+
+message RegisterUserRequest {
+	string email = 1;
+	string name = 2;
+	string pic_url = 3;
+	string username = 4;
+	string alias = 5;
+	string about = 6;
+	string password = 150;
+}
+
+// RegisterUserResponse holds the id of the user that just signed in
+message RegisterUserResponse {
+	string user_id = 1;
+}
+
+// NotifyUser maps notifications to users.
+message NotifyUser {
+	string user_id = 1; // receiver
+	dataformat.Notif notification = 2; // actual message
+}
+
+message SaveNotifResponse {}
+
+message CreateThreadRequest {
+	string user_id = 1;
+	context.Thread ctx = 2;
+	google.protobuf.Timestamp publish_date = 3;
+}
+
+message CreateThreadResponse {}
+
+message CommentRequest {
+	string user_id = 1;
+	context.Comment ctx = 2;
+}
+
+message CommentResponse {}
+
+message SubcommentRequest {
+	string user_id = 1;
+	context.Subcomment ctx = 2;
+}
+
+message SubcommentResponse {}
+
+message OldThreadRequest {
+	string user_id = 1;
+	context.Thread ctx = 2;
+}
+
+message OldThreadResponse {}
+
+message OldCommentRequest {
+	string user_id = 1;
+	context.Comment ctx = 2;
+}
+
+message OldCommentResponse {}
+
+message OldSubcommentRequest {
+	string user_id = 1;
+	context.Subcomment ctx = 2;
+}
+
+message OldSubcommentResponse {}
+
+message DeleteThreadRequest {
+	string user_id = 1;
+	context.Thread ctx = 2;
+}
+
+message DeleteThreadResponse {}
+
+message DeleteCommentRequest {
+	string user_id = 1;
+	context.Comment ctx = 2;
+}
+
+message DeleteCommentResponse {}
+
+message DeleteSubcommentRequest {
+	string user_id = 1;
+	context.Subcomment ctx = 2;
+}
+
+message DeleteSubcommentResponse{}
+
+message RecentActivityRequest {
+	string user_id = 1;
+}
+
+message SavedThreadsRequest {
+	string user_id = 2;
+}
+
+message SavedThreadsResponse {
+	repeated context.Thread references = 1;
+}
+
+service CrudUsers {
+	// Get a user's basic data to be displayed in the header navigation section.
+	rpc GetUserHeaderData(GetBasicUserDataRequest) returns (UserHeaderData) {}
+	// Update a user's basic data.
+	rpc UpdateBasicUserData(UpdateBasicUserDataRequest) returns (UpdateBasicUserDataResponse) {}
+	// Get a user's basic data to be dislayed in page.
+	rpc GetBasicUserData(GetBasicUserDataRequest) returns (dataformat.BasicUserData) {}
+	// Get the list of users followed by a given user.
+	rpc GetUserFollowingIds(GetBasicUserDataRequest) returns (UserList) {}
+
+	// Mark unread notifications as read.
+	rpc MarkAllAsRead(ReadNotifsRequest) returns (ReadNotifsResponse) {}
+	// Clear all the notifications.
+	rpc ClearNotifs(ClearNotifsRequest) returns (ClearNotifsResponse) {}
+
+	// Follow a user.
+	rpc FollowUser(FollowUserRequest) returns (FollowUserResponse) {}
+	// Unfollow a user.
+	rpc UnfollowUser(UnfollowUserRequest) returns (UnfollowUserResponse) {}
+
+	// Request to save thread.
+	rpc SaveThread(SaveThreadRequest) returns (SaveThreadResponse) {}
+	// Remove reference to thread from list of saved threads of user.
+	rpc RemoveSaved(RemoveSavedRequest) returns (RemoveSavedResponse) {}
+
+	// Get either following or followers users' basic data.
+	rpc ViewUsers(ViewUsersRequest) returns (ViewUsersResponse) {}
+	// Get username basic data, following, followers and threads created.
+	rpc ViewUserByUsername(ViewUserByUsernameRequest) returns (ViewUserResponse) {}
+	// Get dashboard data for a given user.
+	rpc GetDashboardData(GetDashboardDataRequest) returns (DashboardData) {}
+
+	// Validate user credentials to login.
+	rpc Login(LoginRequest) returns (LoginResponse) {}
+	// Register new user.
+	rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse) {}
+
+	// SaveNotif updates the given notification if it was already there, or appends
+	// it to the list of unread notifications of the given user.
+	// If the notification was in the list of read notifications, it removes it from
+	// there.
+	rpc SaveNotif(NotifyUser) returns (SaveNotifResponse) {}
+
+	// Append thread to list of recent activity of user.
+	rpc CreateThread(CreateThreadRequest) returns (CreateThreadResponse) {}
+	// Append comment to list of recent activity of user.
+	rpc Comment(CommentRequest) returns (CommentResponse) {}
+	// Append subcomment to list of recent activity of user.
+	rpc Subcomment(SubcommentRequest) returns (SubcommentResponse) {}
+
+	// Move thread from recent activity of user to list of old activity.
+	rpc OldThread(OldThreadRequest) returns (OldThreadResponse) {}
+	// Move comment from recent activity of user to list of old activity.
+	rpc OldComment(OldCommentRequest) returns (OldCommentResponse) {}
+	// Move subcomment from recent activity of user to list of old activity.
+	rpc OldSubcomment(OldSubcommentRequest) returns (OldSubcommentResponse) {}
+
+	// Remove reference to thread from list of activity of user.
+	rpc DeleteThread(DeleteThreadRequest) returns (DeleteThreadResponse) {}
+	// Remove reference to comment from list of activity of user.
+	rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {}
+	// Remove reference to subcomment from list of activity of user.
+	rpc DeleteSubcomment(DeleteSubcommentRequest) returns (DeleteSubcommentResponse) {}
+
+	// Get the recent activity of a user.
+	rpc RecentActivity(RecentActivityRequest) returns (dataformat.Activity) {}
+	// Get saved threads of a user.
+	rpc SavedThreads(SavedThreadsRequest) returns (SavedThreadsResponse) {}
+}
