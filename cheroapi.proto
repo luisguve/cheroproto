@@ -88,29 +88,21 @@ message SavedPattern {
 	string user_id = 3;
 }
 
-// IdList holds a list of ids of content
-message IdList {
-	repeated string ids = 1;
-}
-
-// ActivityPattern holds an array of ContentStatus, composing up a pattern of content 
-// that's expected to get back. It is intended for recycling activity from a specific 
-// user or a list of users.
+// ActivityPattern holds an array of ContentStatus, composing up a pattern of content
+// that's expected to get back. It is intended for recycling activity from different
+// users.
 message ActivityPattern {
 	repeated metadata.ContentStatus pattern = 1;
 	// discard_ids is a map of user_ids to activity from the user referred to by 
 	// the key that must not be returned back, since it's content the user has 
 	// already seen.
 	map<string, dataformat.Activity> discard_ids = 2;
-	// context is either users following or the user itself.
-	oneof context {
-		UserList users = 3;
-		string user_id = 4;
-	}
+	// users holds the list of users to get their activity.
+	repeated string users = 3;
 }
 
-// UserList holds a list of user ids
-message UserList {
+// IdList holds a list of ids of content
+message IdList {
 	repeated string ids = 1;
 }
 
@@ -237,6 +229,26 @@ message UndoSaveThreadRequest {
 
 message UndoSaveThreadResponse {}
 
+message GetActiveThreadsOverviewRequest{}
+
+message GetThreadsOverviewRequest {
+	repeated string ids = 1;
+}
+
+message ContentOverview {
+	metadata.Content metadata = 1;
+	context.Context context = 2;
+}
+
+message GetContentsByContextRequest {
+	repeated ContentContext contents = 1;
+}
+
+message ContentContext {
+	context.Context key = 1;
+	string status = 2;
+}
+
 service CrudCheropatilla {
 	// Get new feed of either threads in a section or comments in a thread.
 	//
@@ -249,12 +261,14 @@ service CrudCheropatilla {
 	// request with a nil ContentContext or a codes.Internal error in case of
 	// a database querying or network issue.
 	rpc RecycleContent(ContentPattern) returns (stream ContentRule) {}
-	// Get new feed of threads in general (from multiple sections)
-	rpc RecycleGeneral(GeneralPattern) returns (stream ContentRule) {}
-	// Get new activity from either multiple users or a single user.
-	rpc RecycleActivity(ActivityPattern) returns (stream ContentRule) {}
-	// Get new feed of saved threads of a user
-	rpc RecycleSaved(SavedPattern) returns (stream ContentRule) {}
+	// Get metadata of active threads.
+	rpc GetActiveThreadsOverview(GetActiveThreadsOverviewRequest) returns (stream metadata.GeneralContent) {}
+	// Get metadata of threads along with the section information.
+	rpc GetThreadsOverview(GetThreadsOverviewRequest) returns (stream metadata.GeneralContent) {}
+	// Get metadata of contents along with their context.
+	rpc GetActivityOverview(dataformat.Activity) returns (stream ContentOverview) {}
+	// Get data of contents by their context; either thread, comment or subcomment.
+	rpc GetContentsByContext(GetContentsByContextRequest) returns (stream ContentRule) {}
 
 	// Post upvote on thread, comment or subcomment
 	rpc Upvote(UpvoteRequest) returns (stream NotifyUser) {}
@@ -278,4 +292,13 @@ service CrudCheropatilla {
 	rpc SaveThread(SaveThreadRequest) returns(SaveThreadResponse) {}
 	// Request to remove thread from user's list of saved threads
 	rpc UndoSaveThread(UndoSaveThreadRequest) returns (UndoSaveThreadResponse) {}
+}
+
+service CrudGeneral {
+	// Get new feed of threads in general (from multiple sections)
+	rpc RecycleGeneral(GeneralPattern) returns (stream ContentRule) {}
+	// Get new activity from either multiple users or a single user.
+	rpc RecycleActivity(ActivityPattern) returns (stream ContentRule) {}
+	// Get new feed of saved threads of a user
+	rpc RecycleSaved(SavedPattern) returns (stream ContentRule) {}
 }
