@@ -13,6 +13,7 @@ message Context {
 		Comment comment_ctx = 3;
 		Subcomment subcomment_ctx = 4;
 	}
+	string section_id = 5;
 }
 
 // A Section is the highest level and just has the name of the section.
