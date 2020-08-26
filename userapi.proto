@@ -5,9 +5,10 @@ syntax = "proto3";
 package userapi;
 option go_package = "github.com/luisguve/cheroproto-go/userapi";
 
-import "google/protobuf/timestamp.proto";
-import "data_format.proto";
+import "cheroapi.proto";
 import "context.proto";
+import "data_format.proto";
+import "google/protobuf/timestamp.proto";
 
 // UserHeaderData holds information to be displayed in the header navigation section
 // of every page.
@@ -247,15 +248,29 @@ message DeleteSubcommentRequest {
 message DeleteSubcommentResponse{}
 
 message RecentActivityRequest {
-	string user_id = 1;
+	// discard_ids is a map of user_ids to activity from the user referred to by 
+	// the key that must not be returned back, since it's content the user has 
+	// already seen.
+	map<string, dataformat.Activity> discard_ids = 1;
+	// users holds the list of users to get their activity.
+	repeated string users = 2;
+}
+
+message RecentActivityResponse {
+	// references is a map of section ids to activity.
+	map<string, dataformat.Activity> references = 1;
 }
 
 message SavedThreadsRequest {
-	string user_id = 2;
+	string user_id = 1;
+	// discard_ids is a map of section names mapped to content ids that must not be 
+	// returned back, since it's content the user has already seen.
+	map<string, cheropatillapb.IdList> discard_ids = 2;
 }
 
 message SavedThreadsResponse {
-	repeated context.Thread references = 1;
+	// references holds a list of thread ids for each section.
+	map<string, cheropatillapb.IdList> references = 1;
 }
 
 service CrudUsers {
@@ -299,7 +314,7 @@ service CrudUsers {
 	// it to the list of unread notifications of the given user.
 	// If the notification was in the list of read notifications, it removes it from
 	// there.
-	rpc SaveNotif(NotifyUser) returns (SaveNotifResponse) {}
+	rpc SaveNotif(cheropatillapb.NotifyUser) returns (SaveNotifResponse) {}
 
 	// Append thread to list of recent activity of user.
 	rpc CreateThread(CreateThreadRequest) returns (CreateThreadResponse) {}
@@ -323,7 +338,7 @@ service CrudUsers {
 	rpc DeleteSubcomment(DeleteSubcommentRequest) returns (DeleteSubcommentResponse) {}
 
 	// Get the recent activity of a user.
-	rpc RecentActivity(RecentActivityRequest) returns (dataformat.Activity) {}
+	rpc RecentActivity(RecentActivityRequest) returns (RecentActivityResponse) {}
 	// Get saved threads of a user.
 	rpc SavedThreads(SavedThreadsRequest) returns (SavedThreadsResponse) {}
 }
