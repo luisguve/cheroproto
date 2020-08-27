@@ -175,12 +175,6 @@ message RegisterUserResponse {
 	string user_id = 1;
 }
 
-// NotifyUser maps notifications to users.
-message NotifyUser {
-	string user_id = 1; // receiver
-	dataformat.Notif notification = 2; // actual message
-}
-
 message SaveNotifResponse {}
 
 message CreateThreadRequest {
