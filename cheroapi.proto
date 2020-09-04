@@ -36,6 +36,8 @@ message ContentMetadata {
 	repeated string replier_ids = 7;
 	// list of users who saved this content
 	repeated string users_who_saved = 8;
+	// section_id is the id of the section
+	string section_id = 9;
 }
 
 message ContentData {
